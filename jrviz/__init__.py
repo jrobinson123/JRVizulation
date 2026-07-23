@@ -1,4 +1,4 @@
-"""jrviz — a tiny, modern-looking charting layer over matplotlib.
+"""jrviz — a black-and-gold, gradient charting layer over matplotlib.
 
     import jrviz as vz
     vz.bar(["A", "B", "C"], [3, 7, 5], title="Widgets sold")

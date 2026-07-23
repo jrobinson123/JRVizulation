@@ -1,7 +1,9 @@
 # jrviz
 
-A tiny, modern-looking charting layer over matplotlib. Sensible defaults, a
-validated colorblind-safe palette, and light/dark themes — in under 150 lines.
+A **black-and-gold, gradient** charting layer over matplotlib. Molten-gold
+gradient fills, near-black surfaces, and engraved display type. The house style
+is deliberately dramatic — tuned to be *interesting* rather than maximally
+accessible or neutral.
 
 ## Install
 
@@ -9,8 +11,10 @@ validated colorblind-safe palette, and light/dark themes — in under 150 lines.
 pip install -e .
 ```
 
-Requires Python ≥ 3.9, `matplotlib` ≥ 3.6, and `numpy` ≥ 1.20 (both installed
-automatically).
+Requires Python ≥ 3.9, `matplotlib` ≥ 3.6, and `numpy` ≥ 1.20 (installed
+automatically). The **Cinzel** and **EB Garamond** display faces are bundled and
+registered on import — no system font setup needed (SIL Open Font License, see
+[`jrviz/fonts/LICENSES.md`](jrviz/fonts/LICENSES.md)).
 
 ## Quickstart
 
@@ -33,25 +37,29 @@ run `python examples/gallery.py` to regenerate them.
 
 ![heatmap](examples/images/heatmap.png)
 
+Pass `light=True` for the antique-parchment variant:
+
+![parchment](examples/images/parchment.png)
+
 ```python
 import numpy as np
 import jrviz as vz
 
-# Bar with value labels
+# Bar — vertical gold gradient per bar, value labels above
 vz.bar(["Q1", "Q2", "Q3", "Q4"], [12, 19, 14, 22], title="Quarterly revenue", ylabel="$M")
 
-# Multi-series line
+# Multi-series line — glowing strokes over gradient area fills
 x = np.arange(8)
 vz.line(x, [[3, 4, 6, 5, 7, 8, 7, 9], [2, 3, 3, 4, 5, 5, 6, 7]],
         labels=["North", "South"], title="Weekly signups")
 
-# Scatter in dark mode
-vz.scatter(np.random.randn(120), np.random.randn(120), title="Scatter", dark=True)
+# Scatter — points shaded bright-gold→bronze by y-value, with a soft glow
+vz.scatter(np.random.randn(120), np.random.randn(120), title="Scatter")
 
-# Histogram
+# Histogram — gradient bars
 vz.hist(np.random.randn(800), bins=30, title="Distribution", xlabel="value")
 
-# Heatmap on the sequential ramp
+# Heatmap — near-black→gold sequential ramp
 vz.heatmap(np.random.rand(5, 5), row_labels=list("ABCDE"), col_labels=list("12345"),
            title="Heatmap")
 
@@ -83,28 +91,29 @@ these keyword-only arguments:
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `ax` | `matplotlib.axes.Axes` | `None` | Draw onto an existing axes instead of creating a new figure. |
-| `dark` | `bool` | `False` | Use the dark theme (light surface/ink otherwise). |
-| `title` | `str` | `None` | Left-aligned bold chart title. |
+| `light` | `bool` | `False` | Use the parchment theme; the default is the onyx (black) theme. |
+| `title` | `str` | `None` | Left-aligned engraved (Cinzel) chart title. |
 | `figsize` | `(float, float)` | `(7, 4.2)` | Figure size in inches (ignored when `ax` is given). |
 
 `bar`, `line`, `scatter`, and `hist` additionally accept `xlabel` and `ylabel`
 (`str`, default `None`) for axis labels. All plotting functions **return the
 `Axes`** they drew on.
 
-### `bar(categories, values, *, color=None, **common)`
+### `bar(categories, values, **common)`
 
-Vertical bar chart with a value label above each bar.
+Vertical bar chart; each bar is filled with a bronze→gold vertical gradient and
+gets a value label above it.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `categories` | sequence of `str` | — | X-axis category labels. |
 | `values` | sequence of `float` | — | Bar heights, one per category. |
-| `color` | color | first palette hue | Fill color for all bars. |
 
 ### `line(x, series, *, labels=None, **common)`
 
-One or more line series sharing an x-axis. Each series gets the next palette
-hue and a marker at every point.
+One or more line series sharing an x-axis. Each series gets the next gold hue, a
+soft glow, a translucent gradient fill down to the baseline, and a marker at
+every point.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -112,30 +121,29 @@ hue and a marker at every point.
 | `series` | 1-D or 2-D sequence | — | A single series (`[y0, y1, …]`) or a list of series (`[[…], [… ]]`). |
 | `labels` | list of `str` | `None` | Legend label per series; a legend is drawn only when given. |
 
-### `scatter(x, y, *, color=None, size=45, **common)`
+### `scatter(x, y, *, color=None, size=48, **common)`
 
-Scatter plot of paired `x`/`y` points.
+Scatter plot with a soft glow behind each point.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `x`, `y` | sequences | — | Point coordinates (equal length). |
-| `color` | color | first palette hue | Marker color. |
-| `size` | `float` | `45` | Marker area in points². |
+| `color` | color | `None` | A single fill color for all points. When `None`, points are shaded by their `y`-value along the gold ramp. |
+| `size` | `float` | `48` | Marker area in points². |
 
-### `hist(values, *, bins=20, color=None, **common)`
+### `hist(values, *, bins=20, **common)`
 
-Histogram of a single distribution.
+Histogram of a single distribution, drawn as gradient bars.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `values` | sequence of `float` | — | Values to bin. |
 | `bins` | `int` or sequence | `20` | Bin count, or explicit bin edges. |
-| `color` | color | first palette hue | Bar fill color. |
 
 ### `heatmap(matrix, *, row_labels=None, col_labels=None, **common)`
 
-Magnitude grid colored with the sequential (light→dark blue) ramp, plus a
-colorbar. Accepts the common parameters except `xlabel`/`ylabel`.
+Magnitude grid colored with the near-black→gold sequential ramp, plus a colorbar.
+Accepts the common parameters except `xlabel`/`ylabel`.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -147,7 +155,7 @@ colorbar. Accepts the common parameters except `xlabel`/`ylabel`.
 
 | Function | Description |
 |----------|-------------|
-| `style(dark=False)` | Apply the jrviz theme to matplotlib's global rcParams and return the color-role dict. Called automatically by every chart; use directly if you want the theme applied to your own matplotlib code. |
+| `style(light=False)` | Apply the jrviz theme to matplotlib's global rcParams and return the color-role dict. Called automatically by every chart; use directly to theme your own matplotlib code. |
 | `show(*args, **kwargs)` | `tight_layout()` then `plt.show()`. |
 | `save(path, *args, **kwargs)` | `tight_layout()` then `plt.savefig(path, dpi=180, …)`. |
 
@@ -157,6 +165,6 @@ Three color sequences are exported for building your own marks:
 
 | Name | Purpose |
 |------|---------|
-| `CATEGORICAL` | 8 distinct, colorblind-safe hues for categories/series. |
-| `SEQUENTIAL` | Single-hue blue ramp (light→dark) for magnitude. |
-| `DIVERGING` | Cool ↔ neutral ↔ warm triple for signed data. |
+| `CATEGORICAL` | 8 gold/bronze/copper hues for categories/series (separated by lightness). |
+| `SEQUENTIAL` | Near-black→gold ramp for magnitude (used by `heatmap`). |
+| `DIVERGING` | Gold ↔ ash ↔ patina triple for signed data. |

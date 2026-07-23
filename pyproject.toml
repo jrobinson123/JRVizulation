@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "jrviz"
 version = "0.1.0"
-description = "A tiny, modern-looking charting layer over matplotlib."
+description = "A black-and-gold, gradient charting layer over matplotlib."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -28,3 +28,6 @@ Repository = "https://github.com/jrobinson123/JRVizulation"
 
 [tool.setuptools]
 packages = ["jrviz"]
+
+[tool.setuptools.package-data]
+jrviz = ["fonts/*.ttf", "fonts/*.md"]

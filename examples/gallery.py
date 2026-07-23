@@ -32,9 +32,8 @@ vz.line(x, [[3, 4, 6, 5, 7, 8, 7, 9], [2, 3, 3, 4, 5, 5, 6, 7]],
         labels=["North", "South"], title="Weekly signups")
 save("line.png")
 
-# scatter (dark mode) ---------------------------------------------------------
-vz.scatter(rng.normal(size=120), rng.normal(size=120),
-           title="Scatter (dark)", dark=True)
+# scatter (gradient-by-value) -------------------------------------------------
+vz.scatter(rng.normal(size=120), rng.normal(size=120), title="Scatter")
 save("scatter.png")
 
 # histogram -------------------------------------------------------------------
@@ -45,5 +44,10 @@ save("hist.png")
 vz.heatmap(rng.random((5, 5)), row_labels=list("ABCDE"),
            col_labels=list("12345"), title="Heatmap")
 save("heatmap.png")
+
+# parchment variant (light=True) ----------------------------------------------
+vz.bar(["I", "II", "III", "IV"], [8, 15, 11, 18],
+       title="Parchment variant", ylabel="units", light=True)
+save("parchment.png")
 
 print("done")
