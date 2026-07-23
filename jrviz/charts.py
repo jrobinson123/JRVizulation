@@ -1,6 +1,6 @@
-"""vizlib: a tiny, modern-looking charting layer over matplotlib.
+"""Chart functions for jrviz — a modern-looking charting layer over matplotlib.
 
-    import vizlib as vz
+    import jrviz as vz
     vz.bar(["A", "B", "C"], [3, 7, 5], title="Widgets sold")
     vz.line(x, [y1, y2], labels=["north", "south"], title="Revenue")
     vz.show()
@@ -26,7 +26,7 @@ _DARK = dict(surface="#1a1a19", ink="#ffffff", ink2="#c3c2b7", muted="#898781",
 
 
 def style(dark=False):
-    """Apply the vizlib rcParams theme and return its color roles."""
+    """Apply the jrviz rcParams theme and return its color roles."""
     theme = _DARK if dark else _LIGHT
     plt.rcParams.update({
         "figure.facecolor": theme["surface"],
@@ -124,7 +124,7 @@ def heatmap(matrix, *, row_labels=None, col_labels=None, ax=None, dark=False,
     """Magnitude grid on the sequential ramp."""
     theme = style(dark)
     fig, ax = _canvas(ax, figsize)
-    cmap = LinearSegmentedColormap.from_list("vizlib_seq", SEQUENTIAL)
+    cmap = LinearSegmentedColormap.from_list("jrviz_seq", SEQUENTIAL)
     im = ax.imshow(matrix, cmap=cmap, aspect="auto")
     ax.set_xticks(range(len(col_labels or [])), labels=col_labels or [])
     ax.set_yticks(range(len(row_labels or [])), labels=row_labels or [])

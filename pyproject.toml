@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jrviz"
+version = "0.1.0"
+description = "A tiny, modern-looking charting layer over matplotlib."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Jonah Robinson" }]
+keywords = ["matplotlib", "visualization", "charts", "plotting", "dataviz"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Framework :: Matplotlib",
+]
+dependencies = [
+    "matplotlib>=3.6",
+    "numpy>=1.20",
+]
+
+[project.urls]
+Homepage = "https://github.com/jrobinson123/JRVizulation"
+Repository = "https://github.com/jrobinson123/JRVizulation"
+
+[tool.setuptools]
+packages = ["jrviz"]
