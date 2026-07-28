@@ -66,6 +66,19 @@ vz.heatmap(np.random.rand(5, 5), row_labels=list("ABCDE"), col_labels=list("1234
 vz.show()
 ```
 
+### Triangular ornament (Deus Ex look)
+
+`ornament(ax)` layers a faceted low-poly gold backdrop and angular HUD-style
+corner brackets onto a finished chart — the *Mankind Divided* treatment.
+
+![ornament](examples/images/ornament.png)
+
+```python
+ax = vz.bar(["Q1", "Q2", "Q3", "Q4"], [12, 19, 14, 22], title="Augmented", ylabel="$M")
+vz.ornament(ax)    # faceted backdrop + corner brackets, in one call
+vz.show()
+```
+
 ### Composing into subplots
 
 Every chart accepts an existing matplotlib `ax`, so you can build multi-panel
@@ -156,6 +169,7 @@ Accepts the common parameters except `xlabel`/`ylabel`.
 | Function | Description |
 |----------|-------------|
 | `style(light=False)` | Apply the jrviz theme to matplotlib's global rcParams and return the color-role dict. Called automatically by every chart; use directly to theme your own matplotlib code. |
+| `ornament(ax=None, *, light=False, seed=7)` | Add the faceted gold backdrop **and** angular corner brackets in one call. `facets(ax, ...)` and `corners(ax, ...)` are the individual pieces (`facets` accepts `density`, `alpha`, `edges`; both default to the current axes). |
 | `show(*args, **kwargs)` | `tight_layout()` then `plt.show()`. |
 | `save(path, *args, **kwargs)` | `tight_layout()` then `plt.savefig(path, dpi=180, …)`. |
 

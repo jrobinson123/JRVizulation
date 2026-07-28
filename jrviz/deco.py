@@ -1,11 +1,11 @@
 """Deus Ex-flavored triangular ornament — an opt-in decorative layer.
 
     ax = vz.bar(["A", "B", "C"], [3, 7, 5], title="Augmented")
-    vz.facets(ax)     # faceted low-poly gold backdrop
-    vz.corners(ax)    # angular HUD corner brackets
+    vz.ornament(ax)   # faceted low-poly gold backdrop + angular HUD corners
 
-Both draw onto an existing axes (default: the current one) and return it, so
-they compose with any jrviz chart.
+``ornament`` is the one-call entry point; ``facets`` and ``corners`` are the
+individual pieces it composes. All three draw onto an existing axes (default:
+the current one) and return it, so they layer onto any jrviz chart.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,7 +16,16 @@ from matplotlib.patches import Polygon
 from .charts import _GOLD_CMAP, GOLD, _ONYX, _PARCHMENT
 
 
-def facets(ax=None, *, light=False, density=110, alpha=0.16, edges=True, seed=7):
+def ornament(ax=None, *, light=False, seed=7):
+    """Apply the full triangular treatment: faceted backdrop + corner brackets.
+
+    The one-call entry point — equivalent to ``facets(ax); corners(ax)``.
+    """
+    ax = facets(ax, light=light, seed=seed)
+    return corners(ax, light=light)
+
+
+def facets(ax=None, *, light=False, density=110, alpha=0.28, edges=True, seed=7):
     """Draw a faceted, low-poly gold triangulation behind the plotted data.
 
     Points are Delaunay-triangulated across the axes; each facet is shaded
@@ -41,7 +50,7 @@ def facets(ax=None, *, light=False, density=110, alpha=0.16, edges=True, seed=7)
     ax.add_collection(faces, autolim=False)
     if edges:
         wire = PolyCollection(verts, facecolors="none", edgecolors=GOLD[-1],
-                              linewidths=0.4, alpha=0.13,
+                              linewidths=0.55, alpha=0.22,
                               transform=ax.transAxes, zorder=-0.9)
         ax.add_collection(wire, autolim=False)
     return ax

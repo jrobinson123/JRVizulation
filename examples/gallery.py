@@ -50,4 +50,10 @@ vz.bar(["I", "II", "III", "IV"], [8, 15, 11, 18],
        title="Parchment variant", ylabel="units", light=True)
 save("parchment.png")
 
+# triangular ornament (Deus Ex look) ------------------------------------------
+ax = vz.bar(["Q1", "Q2", "Q3", "Q4"], [12, 19, 14, 22],
+            title="Augmented", ylabel="$M")
+vz.ornament(ax)
+save("ornament.png")
+
 print("done")
