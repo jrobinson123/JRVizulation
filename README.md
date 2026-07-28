@@ -152,7 +152,7 @@ Histogram of a single distribution, drawn as gradient bars.
 | Function | Description |
 |----------|-------------|
 | `style(light=False)` | Apply the jrviz theme to matplotlib's global rcParams and return the color-role dict. Called automatically by every chart; use directly to theme your own matplotlib code. |
-| `ornament(ax=None, *, light=False, seed=7)` | Add the faceted gold backdrop **and** angular corner brackets in one call. `facets(ax, ...)` and `corners(ax, ...)` are the individual pieces (`facets` accepts `density`, `alpha`, `edges`; both default to the current axes). |
+| `ornament(ax=None, *, light=False, seed=7)` | Add the faceted gold backdrop **and** angular corner brackets in one call. `facets` and `corners` are the individual pieces — both default to the current axes: `facets(ax, *, light=False, density=110, alpha=0.28, edges=True, seed=7)` tunes the mesh, `corners(ax, *, light=False, size=0.055, color=None)` the brackets. |
 | `show(*args, **kwargs)` | `tight_layout()` then `plt.show()`. |
 | `save(path, *args, **kwargs)` | `tight_layout()` then `plt.savefig(path, dpi=180, …)`. |
 
