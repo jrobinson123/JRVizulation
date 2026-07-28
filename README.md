@@ -35,8 +35,6 @@ run `python examples/gallery.py` to regenerate them.
 | ![bar](examples/images/bar.png) | ![line](examples/images/line.png) |
 | ![scatter](examples/images/scatter.png) | ![hist](examples/images/hist.png) |
 
-![heatmap](examples/images/heatmap.png)
-
 Pass `light=True` for the antique-parchment variant:
 
 ![parchment](examples/images/parchment.png)
@@ -58,10 +56,6 @@ vz.scatter(np.random.randn(120), np.random.randn(120), title="Scatter")
 
 # Histogram — gradient bars
 vz.hist(np.random.randn(800), bins=30, title="Distribution", xlabel="value")
-
-# Heatmap — near-black→gold sequential ramp
-vz.heatmap(np.random.rand(5, 5), row_labels=list("ABCDE"), col_labels=list("12345"),
-           title="Heatmap")
 
 vz.show()
 ```
@@ -98,8 +92,8 @@ plt.show()
 
 ### Common parameters
 
-Every plotting function (`bar`, `line`, `scatter`, `hist`, `heatmap`) accepts
-these keyword-only arguments:
+Every plotting function (`bar`, `line`, `scatter`, `hist`) accepts these
+keyword-only arguments:
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -153,17 +147,6 @@ Histogram of a single distribution, drawn as gradient bars.
 | `values` | sequence of `float` | — | Values to bin. |
 | `bins` | `int` or sequence | `20` | Bin count, or explicit bin edges. |
 
-### `heatmap(matrix, *, row_labels=None, col_labels=None, **common)`
-
-Magnitude grid colored with the near-black→gold sequential ramp, plus a colorbar.
-Accepts the common parameters except `xlabel`/`ylabel`.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `matrix` | 2-D array | — | Values to color, shape `(rows, cols)`. |
-| `row_labels` | list of `str` | `None` | Y-axis tick labels. |
-| `col_labels` | list of `str` | `None` | X-axis tick labels. |
-
 ### Helpers
 
 | Function | Description |
@@ -180,5 +163,5 @@ Three color sequences are exported for building your own marks:
 | Name | Purpose |
 |------|---------|
 | `CATEGORICAL` | 8 gold/bronze/copper hues for categories/series (separated by lightness). |
-| `SEQUENTIAL` | Near-black→gold ramp for magnitude (used by `heatmap`). |
+| `SEQUENTIAL` | Near-black→gold ramp for continuous magnitude. |
 | `DIVERGING` | Gold ↔ ash ↔ patina triple for signed data. |

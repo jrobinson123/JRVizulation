@@ -40,11 +40,6 @@ save("scatter.png")
 vz.hist(rng.normal(size=800), bins=30, title="Distribution", xlabel="value")
 save("hist.png")
 
-# heatmap ---------------------------------------------------------------------
-vz.heatmap(rng.random((5, 5)), row_labels=list("ABCDE"),
-           col_labels=list("12345"), title="Heatmap")
-save("heatmap.png")
-
 # parchment variant (light=True) ----------------------------------------------
 vz.bar(["I", "II", "III", "IV"], [8, 15, 11, 18],
        title="Parchment variant", ylabel="units", light=True)

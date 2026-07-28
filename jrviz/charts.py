@@ -38,7 +38,7 @@ CATEGORICAL = [
 ]
 # Molten ramp: bronze -> gold -> pale, used for every gradient fill.
 GOLD = ["#2a1a06", "#6b4a12", "#b8860b", "#e8bf3c", "#ffe9a8"]
-# Sequential (near-black -> gold) for magnitude / heatmaps.
+# Sequential (near-black -> gold) for continuous magnitude.
 SEQUENTIAL = ["#0b0906", "#3a2708", "#7a5410", "#b8860b", "#e3b83a", "#ffe9a8"]
 # Diverging: gold <-> ash <-> patina.
 DIVERGING = ["#f0c94b", "#1a1712", "#5f8a86"]
@@ -49,7 +49,6 @@ _PARCHMENT = dict(surface="#f4ecd8", page="#ebe1c6", ink="#1a1408", ink2="#7a5c2
                   muted="#94793a", grid="#dccfa8", axis="#b39a5c")
 
 _GOLD_CMAP = LinearSegmentedColormap.from_list("jrviz_gold", GOLD)
-_SEQ_CMAP = LinearSegmentedColormap.from_list("jrviz_seq", SEQUENTIAL)
 
 
 def style(light=False):
@@ -199,26 +198,6 @@ def hist(values, *, bins=20, ax=None, light=False, title=None, xlabel=None,
     _grad_rects(ax, edges[:-1] + gap, edges[1:] - gap, counts.astype(float), _GOLD_CMAP)
     ax.set_xlim(edges[0], edges[-1])
     return _finish(ax, theme, title=title, xlabel=xlabel, ylabel=ylabel)
-
-
-def heatmap(matrix, *, row_labels=None, col_labels=None, ax=None, light=False,
-             title=None, figsize=(6, 5)):
-    """Magnitude grid on the near-black -> gold sequential ramp."""
-    theme = style(light)
-    fig, ax = _canvas(ax, figsize)
-    im = ax.imshow(matrix, cmap=_SEQ_CMAP, aspect="auto")
-    ax.set_xticks(range(len(col_labels or [])), labels=col_labels or [])
-    ax.set_yticks(range(len(row_labels or [])), labels=row_labels or [])
-    ax.grid(False)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.outline.set_visible(False)
-    cbar.ax.tick_params(color=theme["muted"], labelcolor=theme["muted"], length=0)
-    if title:
-        ax.set_title(title, fontfamily=DISPLAY, fontsize=16, color=theme["ink"],
-                     loc="left", pad=16)
-    return ax
 
 
 def show(*args, **kwargs):

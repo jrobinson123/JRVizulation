@@ -5,7 +5,7 @@
     vz.show()
 """
 from .charts import (
-    bar, line, scatter, hist, heatmap, style, show, save,
+    bar, line, scatter, hist, style, show, save,
     CATEGORICAL, SEQUENTIAL, DIVERGING,
 )
 from .deco import ornament, facets, corners
@@ -13,7 +13,7 @@ from .deco import ornament, facets, corners
 __version__ = "0.1.0"
 
 __all__ = [
-    "bar", "line", "scatter", "hist", "heatmap", "style", "show", "save",
+    "bar", "line", "scatter", "hist", "style", "show", "save",
     "ornament", "facets", "corners",
     "CATEGORICAL", "SEQUENTIAL", "DIVERGING",
 ]
