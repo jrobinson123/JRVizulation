@@ -27,7 +27,10 @@ Homepage = "https://github.com/jrobinson123/JRVizulation"
 Repository = "https://github.com/jrobinson123/JRVizulation"
 
 [tool.setuptools]
-packages = ["jrviz"]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
 jrviz = ["fonts/*.ttf", "fonts/*.md"]

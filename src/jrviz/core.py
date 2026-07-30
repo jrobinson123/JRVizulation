@@ -1,8 +1,10 @@
-"""Chart functions for jrviz — a black-and-gold, gradient charting layer.
+"""Core of jrviz — a black-and-gold, gradient charting layer over matplotlib.
 
     import jrviz as vz
     vz.bar(["A", "B", "C"], [3, 7, 5], title="Widgets sold")
     vz.line(x, [y1, y2], labels=["north", "south"], title="Revenue")
+    ax = vz.bar(["A", "B"], [3, 7], title="Augmented")
+    vz.ornament(ax)   # Deus Ex-style faceted backdrop + corner brackets
     vz.show()
 
 The house style is dramatic, not maximally accessible: near-black surfaces,
@@ -15,9 +17,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import font_manager as _fm
 from matplotlib.colors import LinearSegmentedColormap, to_rgb
+from matplotlib.collections import PolyCollection
 from matplotlib.patches import Polygon
+from matplotlib.tri import Triangulation
 
-# --- fonts (bundled, SIL OFL — see jrviz/fonts/LICENSES.md) -------------------
+# --- fonts (bundled, SIL OFL — see fonts/LICENSES.md) -------------------------
 _FONTS = os.path.join(os.path.dirname(__file__), "fonts")
 for _file in ("Cinzel.ttf", "EBGaramond.ttf", "Cormorant.ttf"):
     _path = os.path.join(_FONTS, _file)
@@ -198,6 +202,67 @@ def hist(values, *, bins=20, ax=None, light=False, title=None, xlabel=None,
     _grad_rects(ax, edges[:-1] + gap, edges[1:] - gap, counts.astype(float), _GOLD_CMAP)
     ax.set_xlim(edges[0], edges[-1])
     return _finish(ax, theme, title=title, xlabel=xlabel, ylabel=ylabel)
+
+
+# --- triangular ornament (Deus Ex look) --------------------------------------
+
+def ornament(ax=None, *, light=False, seed=7):
+    """Apply the full triangular treatment: faceted backdrop + corner brackets.
+
+    The one-call entry point — equivalent to ``facets(ax); corners(ax)``.
+    """
+    ax = facets(ax, light=light, seed=seed)
+    return corners(ax, light=light)
+
+
+def facets(ax=None, *, light=False, density=110, alpha=0.28, edges=True, seed=7):
+    """Draw a faceted, low-poly gold triangulation behind the plotted data.
+
+    Points are Delaunay-triangulated across the axes; each facet is shaded
+    along the gold ramp as if lit from the top-left, with per-facet jitter for
+    the crystalline "shattered gold" look.
+    """
+    ax = ax or plt.gca()
+    rng = np.random.default_rng(seed)
+    pts = rng.random((density, 2))
+    frame = np.array([[0, 0], [1, 0], [0, 1], [1, 1],
+                      [0.5, 0], [0.5, 1], [0, 0.5], [1, 0.5]])
+    P = np.vstack([pts, frame])
+    tri = Triangulation(P[:, 0], P[:, 1])
+    verts = P[tri.triangles]                      # (ntri, 3, 2), axes coords
+    cent = verts.mean(axis=1)                      # facet centroids
+    shade = 0.5 * (1 - cent[:, 0]) + 0.5 * cent[:, 1]   # brighter top-left
+    shade = np.clip(shade + rng.normal(0, 0.09, shade.shape), 0, 1)
+    colors = _GOLD_CMAP(0.12 + 0.72 * shade)
+
+    faces = PolyCollection(verts, facecolors=colors, edgecolors="none",
+                           alpha=alpha, transform=ax.transAxes, zorder=-1)
+    ax.add_collection(faces, autolim=False)
+    if edges:
+        wire = PolyCollection(verts, facecolors="none", edgecolors=GOLD[-1],
+                              linewidths=0.55, alpha=0.22,
+                              transform=ax.transAxes, zorder=-0.9)
+        ax.add_collection(wire, autolim=False)
+    return ax
+
+
+def corners(ax=None, *, light=False, size=0.055, color=None):
+    """Draw angular gold corner brackets (Deus Ex HUD framing) on the axes."""
+    ax = ax or plt.gca()
+    theme = _PARCHMENT if light else _ONYX
+    c = color or theme["ink2"]
+    s = size
+    tall = s * 1.7
+    tris = [
+        [(0, 0), (s, 0), (0, tall)],
+        [(1, 0), (1 - s, 0), (1, tall)],
+        [(0, 1), (s, 1), (0, 1 - tall)],
+        [(1, 1), (1 - s, 1), (1, 1 - tall)],
+    ]
+    for v in tris:
+        ax.add_patch(Polygon(v, closed=True, facecolor=c, edgecolor="none",
+                             transform=ax.transAxes, clip_on=False, zorder=6))
+    return ax
 
 
 def show(*args, **kwargs):

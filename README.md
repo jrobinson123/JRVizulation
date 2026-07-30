@@ -14,7 +14,7 @@ pip install -e .
 Requires Python ≥ 3.9, `matplotlib` ≥ 3.6, and `numpy` ≥ 1.20 (installed
 automatically). The **Cinzel** and **EB Garamond** display faces are bundled and
 registered on import — no system font setup needed (SIL Open Font License, see
-[`jrviz/fonts/LICENSES.md`](jrviz/fonts/LICENSES.md)).
+[`src/jrviz/fonts/LICENSES.md`](src/jrviz/fonts/LICENSES.md)).
 
 ## Quickstart
 
@@ -86,6 +86,21 @@ fig, (left, right) = plt.subplots(1, 2, figsize=(12, 4))
 vz.bar(["A", "B", "C"], [3, 7, 5], ax=left, title="Left")
 vz.line(range(5), [0, 2, 1, 3, 2], ax=right, title="Right")
 plt.show()
+```
+
+## Project layout
+
+```
+JRVizulation/
+├─ src/
+│  └─ jrviz/
+│     ├─ __init__.py     # public API
+│     ├─ core.py         # charts, theme, and the triangular ornament
+│     └─ fonts/          # bundled Cinzel / EB Garamond (SIL OFL)
+├─ examples/             # gallery.py + generated images
+├─ README.md
+├─ pyproject.toml
+└─ LICENSE
 ```
 
 ## API reference

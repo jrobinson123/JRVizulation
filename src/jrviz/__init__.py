@@ -4,11 +4,11 @@
     vz.bar(["A", "B", "C"], [3, 7, 5], title="Widgets sold")
     vz.show()
 """
-from .charts import (
+from .core import (
     bar, line, scatter, hist, style, show, save,
+    ornament, facets, corners,
     CATEGORICAL, SEQUENTIAL, DIVERGING,
 )
-from .deco import ornament, facets, corners
 
 __version__ = "0.1.0"
 
