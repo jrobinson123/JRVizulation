@@ -89,6 +89,34 @@ def _canvas(ax, figsize):
     return plt.subplots(figsize=figsize)
 
 
+# --- pandas interop (duck-typed; pandas is not a dependency) ------------------
+
+def _is_frame(o):
+    return hasattr(o, "columns") and hasattr(o, "to_numpy")
+
+
+def _is_series(o):
+    return hasattr(o, "to_numpy") and hasattr(o, "name") and not _is_frame(o)
+
+
+def _name(o):
+    """Return a stringified pandas name/label, or None."""
+    n = getattr(o, "name", None)
+    return None if n is None else str(n)
+
+
+def _xcoords(ax, x):
+    """Float x positions. Non-numeric x (labels, categories) becomes 0..n-1
+    with the original values shown as tick labels."""
+    arr = np.asarray(x)
+    try:
+        return arr.astype(float)
+    except (ValueError, TypeError):
+        pos = np.arange(len(arr))
+        ax.set_xticks(pos, labels=[str(v) for v in arr])
+        return pos.astype(float)
+
+
 def _finish(ax, theme, *, title=None, xlabel=None, ylabel=None, legend=False):
     if title:
         ax.set_title(title, fontfamily=DISPLAY, fontsize=16, color=theme["ink"],
@@ -140,16 +168,25 @@ def _area_gradient(ax, x, y, color, baseline):
     im.set_clip_path(clip)
 
 
-def bar(categories, values, *, ax=None, light=False, title=None, xlabel=None,
+def bar(categories, values=None, *, ax=None, light=False, title=None, xlabel=None,
          ylabel=None, figsize=(7, 4.2)):
     theme = style(light)
     fig, ax = _canvas(ax, figsize)
-    pos = np.arange(len(categories))
+    if values is None:                    # a single pandas Series or dict-like
+        if _is_series(categories):
+            categories, values = categories.index, categories.to_numpy()
+        elif hasattr(categories, "items"):
+            categories, values = list(categories.keys()), list(categories.values())
+        else:
+            raise TypeError("bar() needs categories and values, "
+                            "or a single pandas Series / mapping")
+    labels = [str(c) for c in np.asarray(categories)]
+    pos = np.arange(len(labels))
     vals = np.asarray(values, dtype=float)
     w = 0.62
     _grad_rects(ax, pos - w / 2, pos + w / 2, vals, _GOLD_CMAP)
     ax.set_xlim(pos[0] - 0.6, pos[-1] + 0.6)
-    ax.set_xticks(pos, labels=categories)
+    ax.set_xticks(pos, labels=labels)
     for p, v in zip(pos, vals):
         ax.text(p, v + vals.max() * 0.02, f"{v:g}", ha="center", va="bottom",
                 color=theme["ink2"], fontsize=10.5, fontfamily=BODY)
@@ -160,7 +197,15 @@ def line(x, series, *, labels=None, ax=None, light=False, title=None, xlabel=Non
           ylabel=None, figsize=(7, 4.2)):
     theme = style(light)
     fig, ax = _canvas(ax, figsize)
-    x = np.asarray(x, dtype=float)
+    if _is_frame(series):                 # each column is a series
+        if labels is None:
+            labels = [str(c) for c in series.columns]
+        series = series.to_numpy().T
+    elif _is_series(series):
+        if labels is None and _name(series):
+            labels = [_name(series)]
+        series = series.to_numpy()
+    x = _xcoords(ax, x)
     S = np.atleast_2d(np.asarray(series, dtype=float))
     base = min(0.0, float(S.min()))
     for i, y in enumerate(S):
@@ -180,6 +225,10 @@ def scatter(x, y, *, ax=None, light=False, title=None, xlabel=None, ylabel=None,
              color=None, size=48, figsize=(7, 4.2)):
     theme = style(light)
     fig, ax = _canvas(ax, figsize)
+    if xlabel is None:
+        xlabel = _name(x)
+    if ylabel is None:
+        ylabel = _name(y)
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     ax.scatter(x, y, s=size * 3.4, color="#ffe9a8", alpha=0.10, linewidths=0,
@@ -197,6 +246,8 @@ def hist(values, *, bins=20, ax=None, light=False, title=None, xlabel=None,
           ylabel=None, figsize=(7, 4.2)):
     theme = style(light)
     fig, ax = _canvas(ax, figsize)
+    if xlabel is None:
+        xlabel = _name(values)
     counts, edges = np.histogram(np.asarray(values, dtype=float), bins=bins)
     gap = np.diff(edges) * 0.04
     _grad_rects(ax, edges[:-1] + gap, edges[1:] - gap, counts.astype(float), _GOLD_CMAP)

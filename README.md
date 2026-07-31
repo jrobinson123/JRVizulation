@@ -3,7 +3,8 @@
 A **black-and-gold, gradient** charting layer over matplotlib. Molten-gold
 gradient fills, near-black surfaces, and engraved display type. The house style
 is deliberately dramatic — tuned to be *interesting* rather than maximally
-accessible or neutral.
+accessible or neutral. Accepts plain lists, NumPy arrays, and **pandas**
+Series/DataFrames interchangeably.
 
 ## Install
 
@@ -73,6 +74,36 @@ vz.ornament(ax)    # faceted backdrop + corner brackets, in one call
 vz.show()
 ```
 
+### Works with pandas
+
+Every chart accepts pandas objects directly — no `.values` / `.to_numpy()`
+needed, and pandas is **not** a dependency (it's duck-typed, so plain
+lists/arrays keep working exactly as before).
+
+```python
+import pandas as pd
+import jrviz as vz
+
+df = pd.DataFrame({"north": [3, 4, 6, 5], "south": [2, 3, 3, 4]},
+                  index=["Q1", "Q2", "Q3", "Q4"])
+
+vz.bar(df["north"])                 # a Series → index becomes the bar labels
+vz.line(df.index, df)               # a DataFrame → one line per column, legend from column names
+vz.scatter(df["north"], df["south"])  # Series names become the x / y axis labels
+vz.hist(df["north"])                # Series name becomes the x label
+vz.show()
+```
+
+Details of the pandas handling:
+
+- **`bar`** takes a single `Series` (its index is the categories) or a `dict`,
+  as well as the usual `(categories, values)`.
+- **`line`** treats a `DataFrame` as *columns = series* and uses the column
+  names as the legend; a non-numeric `x` (labels, categories) is placed at
+  `0…n-1` with the values shown as tick labels.
+- **`scatter`** / **`hist`** fill in `xlabel` / `ylabel` from `Series` names
+  when you don't pass them explicitly.
+
 ### Composing into subplots
 
 Every chart accepts an existing matplotlib `ax`, so you can build multi-panel
@@ -121,15 +152,15 @@ keyword-only arguments:
 (`str`, default `None`) for axis labels. All plotting functions **return the
 `Axes`** they drew on.
 
-### `bar(categories, values, **common)`
+### `bar(categories, values=None, **common)`
 
 Vertical bar chart; each bar is filled with a bronze→gold vertical gradient and
 gets a value label above it.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `categories` | sequence of `str` | — | X-axis category labels. |
-| `values` | sequence of `float` | — | Bar heights, one per category. |
+| `categories` | sequence of `str` | — | X-axis category labels. Or, alone, a pandas `Series`/`dict` (its keys/index become the labels, its values the heights). |
+| `values` | sequence of `float` | `None` | Bar heights, one per category. Omit when `categories` is a `Series`/`dict`. |
 
 ### `line(x, series, *, labels=None, **common)`
 
