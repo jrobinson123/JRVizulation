@@ -9,13 +9,15 @@ Series/DataFrames interchangeably.
 ## Install
 
 ```bash
-pip install -e .
+pip install jrviz
 ```
+
+For local development instead, clone the repo and `pip install -e .`.
 
 Requires Python ≥ 3.9, `matplotlib` ≥ 3.6, and `numpy` ≥ 1.20 (installed
 automatically). The **Cinzel** and **EB Garamond** display faces are bundled and
 registered on import — no system font setup needed (SIL Open Font License, see
-[`src/jrviz/fonts/LICENSES.md`](src/jrviz/fonts/LICENSES.md)).
+[`src/jrviz/fonts/LICENSES.md`](https://github.com/jrobinson123/JRVizulation/blob/main/src/jrviz/fonts/LICENSES.md)).
 
 ## Quickstart
 
@@ -28,17 +30,17 @@ vz.show()          # display, or vz.save("chart.png") to write a PNG
 
 ## Gallery
 
-Every image below is produced by [`examples/gallery.py`](examples/gallery.py) —
+Every image below is produced by [`examples/gallery.py`](https://github.com/jrobinson123/JRVizulation/blob/main/examples/gallery.py) —
 run `python examples/gallery.py` to regenerate them.
 
 | | |
 |---|---|
-| ![bar](examples/images/bar.png) | ![line](examples/images/line.png) |
-| ![scatter](examples/images/scatter.png) | ![hist](examples/images/hist.png) |
+| ![bar](https://raw.githubusercontent.com/jrobinson123/JRVizulation/main/examples/images/bar.png) | ![line](https://raw.githubusercontent.com/jrobinson123/JRVizulation/main/examples/images/line.png) |
+| ![scatter](https://raw.githubusercontent.com/jrobinson123/JRVizulation/main/examples/images/scatter.png) | ![hist](https://raw.githubusercontent.com/jrobinson123/JRVizulation/main/examples/images/hist.png) |
 
 Pass `light=True` for the antique-parchment variant:
 
-![parchment](examples/images/parchment.png)
+![parchment](https://raw.githubusercontent.com/jrobinson123/JRVizulation/main/examples/images/parchment.png)
 
 ```python
 import numpy as np
@@ -66,7 +68,7 @@ vz.show()
 `ornament(ax)` layers a faceted low-poly gold backdrop and angular HUD-style
 corner brackets onto a finished chart — the *Mankind Divided* treatment.
 
-![ornament](examples/images/ornament.png)
+![ornament](https://raw.githubusercontent.com/jrobinson123/JRVizulation/main/examples/images/ornament.png)
 
 ```python
 ax = vz.bar(["Q1", "Q2", "Q3", "Q4"], [12, 19, 14, 22], title="Augmented", ylabel="$M")

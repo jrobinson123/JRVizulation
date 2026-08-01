@@ -23,7 +23,7 @@ from matplotlib.tri import Triangulation
 
 # --- fonts (bundled, SIL OFL — see fonts/LICENSES.md) -------------------------
 _FONTS = os.path.join(os.path.dirname(__file__), "fonts")
-for _file in ("Cinzel.ttf", "EBGaramond.ttf", "Cormorant.ttf"):
+for _file in ("Cinzel.ttf", "EBGaramond.ttf"):
     _path = os.path.join(_FONTS, _file)
     if os.path.exists(_path):
         try:
